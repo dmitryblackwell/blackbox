@@ -7,11 +7,7 @@
 
 ## Tech Stack
 
-<img alt="react" width="200px" src="https://cdn.worldvectorlogo.com/logos/react.svg" />
-<img alt="spring" width="200px" src="https://spring-petclinic.github.io/images/logo-spring.png" />
-<img alt="webpack" width="200px" src="https://cdn.freebiesupply.com/logos/large/2x/webpack-icon-logo-png-transparent.png" />
-<img alt="hibernate" width="200px" src="https://cdn.worldvectorlogo.com/logos/hibernate.svg" />
-
+<img alt="react" width="200px" src="https://cdn.worldvectorlogo.com/logos/react.svg" /> <img alt="spring" width="200px" src="https://spring-petclinic.github.io/images/logo-spring.png" /> <img alt="webpack" width="200px" src="https://cdn.freebiesupply.com/logos/large/2x/webpack-icon-logo-png-transparent.png" /> <img alt="hibernate" width="200px" src="https://cdn.worldvectorlogo.com/logos/hibernate.svg" /> 
 
 ## Install software
 
