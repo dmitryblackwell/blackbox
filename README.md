@@ -6,8 +6,9 @@
 </h1>
 
 ## Tech Stack
-
-<img alt="react" width="200px" src="https://cdn.worldvectorlogo.com/logos/react.svg" /> <img alt="spring" width="200px" src="https://spring-petclinic.github.io/images/logo-spring.png" /> <img alt="webpack" width="200px" src="https://cdn.freebiesupply.com/logos/large/2x/webpack-icon-logo-png-transparent.png" /> <img alt="hibernate" width="200px" src="https://cdn.worldvectorlogo.com/logos/hibernate.svg" /> 
+<p align="center">
+    <img alt="react" width="150px" src="https://cdn.worldvectorlogo.com/logos/react.svg" /> <img alt="spring" width="150px" src="https://spring-petclinic.github.io/images/logo-spring.png" /> <img alt="webpack" width="150px" src="https://cdn.freebiesupply.com/logos/large/2x/webpack-icon-logo-png-transparent.png" /> <img alt="hibernate" width="150px" src="https://cdn.worldvectorlogo.com/logos/hibernate.svg" /> 
+</p>
 
 ## Install software
 
@@ -22,6 +23,7 @@ npm install
 npm start
 ./mvn spring-boot:run
 ```
+
 ## Authors
 * **Dmitry Blackwell** - *Initial work* - [Blackwell](https://github.com/dmitryblackwell)
 * See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
