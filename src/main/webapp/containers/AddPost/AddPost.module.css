@@ -1,0 +1,12 @@
+.root {
+    max-width: 650px;
+    margin: auto;
+    padding: 0 50px;
+}
+.textField {
+    width: 99%;
+    margin: 30px 0;
+}
+.button {
+    float: right
+}
