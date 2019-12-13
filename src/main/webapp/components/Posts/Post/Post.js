@@ -8,6 +8,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import {Link, Redirect} from "react-router-dom";
+import ReactMarkdown from "react-markdown";
 
 const useStyles = makeStyles({
     card: {
@@ -44,9 +45,15 @@ export default function ImgMediaCard(props) {
                         <Typography style={{textDecoration: 'none'}} gutterBottom variant="h5" component="h2">
                             {props.title}
                         </Typography>
+                        <Typography style={{textDecoration: 'none'}} gutterBottom variant="h7" component="h7">
+                            {props.created}
+                        </Typography>
                         <Typography variant="body2" color="textSecondary" component="p">
-                            {props.content.substring(0, 500)}
-                            {props.content.length > 500 ? '...' : ''}
+                            <ReactMarkdown
+                                source={props.content.substring(0, 300)}
+                                escapeHtml={false}
+                            />
+                            {props.content.length > 300 ? '...' : ''}
                         </Typography>
                     </CardContent>
                 </CardActionArea>

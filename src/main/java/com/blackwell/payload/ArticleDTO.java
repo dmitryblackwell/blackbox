@@ -20,5 +20,7 @@ public class ArticleDTO {
 
     private byte[] image;
 
+    String created;
+
     private List<String> tags;
 }

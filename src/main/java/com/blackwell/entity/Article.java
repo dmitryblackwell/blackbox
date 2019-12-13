@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,6 +29,19 @@ public class Article {
 
     private String imageExtension;
     private boolean isImageLoaded;
+
+    private Date created;
+    private Date updated;
+
+    @PrePersist
+    protected void onCreate() {
+        created = new Date();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updated = new Date();
+    }
 
     @ManyToMany(cascade = CascadeType.ALL)
     private List<Tag> tags;

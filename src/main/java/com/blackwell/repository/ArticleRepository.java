@@ -15,5 +15,6 @@ import java.util.UUID;
 
 @Repository
 public interface ArticleRepository extends PagingAndSortingRepository<Article, UUID> {
-    Page<Article> findAllByTagsIn(List<Tag> tags, Pageable pageable);
+    Page<Article> findAllByTagsInOrderByCreatedDesc(List<Tag> tags, Pageable pageable);
+    Page<Article> findAllByOrderByCreatedDesc(Pageable pageable);
 }

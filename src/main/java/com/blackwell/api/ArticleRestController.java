@@ -6,38 +6,34 @@ import com.blackwell.payload.ArticleDTO;
 import com.blackwell.payload.TagSearchRequest;
 import com.blackwell.repository.ArticleRepository;
 import com.blackwell.repository.TagRepository;
+import lombok.AllArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import java.awt.print.Book;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.*;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @RestController
 @RequestMapping("/api/article")
+@AllArgsConstructor
 public class ArticleRestController {
 
-    @Autowired
     private ArticleRepository articleRepository;
-
-    @Autowired
     private TagRepository tagRepository;
 
-    private static final int PAGE_SIZE = 4;
+    private static final int PAGE_SIZE = 3;
 
     public static final String IMAGE_PATH = System.getProperty("user.dir") + File.separator
             + "target" + File.separator + "images" + File.separator;
@@ -47,14 +43,14 @@ public class ArticleRestController {
     public Iterable<ArticleDTO> articles(@RequestBody(required = false) Integer pageId) {
         if (pageId == null)
             pageId = 0;
-        return articleRepository.findAll(PageRequest.of(pageId, PAGE_SIZE))
+        return articleRepository.findAllByOrderByCreatedDesc(PageRequest.of(pageId, PAGE_SIZE))
                 .map(this::mapToDTO);
     }
 
     @PostMapping("/tag/")
     public Set<ArticleDTO> tagSearch(@RequestBody TagSearchRequest tagSearchRequest) {
         Page<Article> articlePage =
-                articleRepository.findAllByTagsIn(
+                articleRepository.findAllByTagsInOrderByCreatedDesc(
                         tagSearchRequest.getTags(),
                         tagSearchRequest.getPageRequest(PAGE_SIZE));
         return articlePage.get()
@@ -104,11 +100,13 @@ public class ArticleRestController {
             // TODO log it
             e.printStackTrace();
         }
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss z");
         return ArticleDTO.builder()
                 .id(article.getId().toString())
                 .title(article.getTitle())
                 .author(article.getAuthor())
                 .content(article.getContent())
+                .created(dateFormat.format(article.getCreated()))
                 .image(fileBytes)
                 .tags(article.getTags().stream()
                         .map(Tag::getName)

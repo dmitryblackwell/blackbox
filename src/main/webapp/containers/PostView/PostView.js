@@ -3,6 +3,7 @@ import Typography from "@material-ui/core/Typography";
 import axios from "../../utils/axios";
 
 import Divider from "@material-ui/core/Divider";
+import ReactMarkdown from "react-markdown";
 
 class PostView extends React.Component {
     state = {};
@@ -30,9 +31,10 @@ class PostView extends React.Component {
                             by @{this.state.post.author}
                         </Typography>
                         <div style={{marginTop: '40px'}}>
-                            <Typography component="p">
-                                {this.state.post.content}
-                            </Typography>
+                            <ReactMarkdown
+                                source={this.state.post.content}
+                                escapeHtml={false}
+                            />
                         </div>
                     </div>
                 </div>
