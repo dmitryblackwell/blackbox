@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table
@@ -18,8 +19,11 @@ public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-
-    private int postsCount;
-
     private String name;
+    private Date created;
+
+    @PrePersist
+    public void onCreate() {
+        created = new Date();
+    }
 }
