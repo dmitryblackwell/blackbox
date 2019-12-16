@@ -27,4 +27,8 @@ public class TagSearchRequest {
     public PageRequest getPageRequest(int pageSize) {
         return PageRequest.of(pageId, pageSize);
     }
+
+    public boolean isTagsPresent() {
+        return tags == null || tags.isEmpty();
+    }
 }
