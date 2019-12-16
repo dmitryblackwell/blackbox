@@ -1,52 +1,68 @@
 import React, {Component} from 'react';
 
-import Posts from '../../components/Posts/Posts';
 import AddButton from "../../components/ui/AddButton";
 import axios from '../../utils/axios';
 import Chip from '@material-ui/core/Chip';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import InfiniteScroll from 'react-infinite-scroller';
+import Post from "../../components/Posts/Post/Post";
+import {ScaleLoader} from 'react-spinners';
+import {css} from '@emotion/core';
 
 class PostsView extends Component {
 
     state = {
         posts: [],
-        tags: []
+        tags: [],
+        currentTags: [],
+        hasMoreArticles: true,
     };
 
     componentDidMount() {
-        this.getArticles();
         axios.get("/tag")
             .then(response => {
-                console.log(response.data);
                 this.setState({tags: response.data});
             })
     }
 
     sortingHandler = (event, values) => {
-        if (values.length === 0) {
-            this.getArticles();
-            return;
-        }
-        const postData = {
-            pageId: 0,
-            tags: values,
-        };
-        axios.post("/article/tag/", postData)
-            .then(response => {
-                this.setState({posts: response.data});
-            });
+        this.setState({currentTags: values, posts: [], hasMoreArticles: true});
     };
 
-    getArticles = () => {
-        axios.get("/article", {pageId: 0}).then(response => {
-            this.setState({posts: response.data.content});
+    loadArticles = (page) => {
+        const params = {
+            pageId: page,
+            tags: this.state.currentTags
+        };
+        axios.post("/article", params).then(response => {
+            console.log({params: params.params, response: response});
+            let newPosts = [...this.state.posts, ...response.data.content];
+            this.setState({
+                posts: newPosts,
+                hasMoreArticles: page < response.data.totalPages,
+            })
         });
     };
 
     render() {
+        let loader =
+            <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center' }} key={0}>
+                <ScaleLoader
+                    sizeUnit={"px"}
+                    size={150}
+                    color={'#ff0000'}
+                    loading={true}
+                />
+            </div>;
+        let items = this.state.posts.map(post => {
+            return <Post key={post.id} {...post}/>;
+        });
         return (
-            <div style={{maxWidth: '650px', margin: '0 auto', paddingTop: '30px'}}>
+            <div style={{maxWidth: '850px', margin: '0 auto', paddingTop: '30px'}}>
                 <Autocomplete
                     multiple
                     id="fixed-tags"
@@ -54,11 +70,11 @@ class PostsView extends Component {
                     getOptionLabel={option => option.name}
                     renderTags={(value, getTagProps) =>
                         value.map((option, index) => (
-                            <Chip name={option.name} label={option.name} {...getTagProps({ index })} />
+                            <Chip name={option.name} label={option.name} {...getTagProps({index})} />
                         ))
                     }
                     onChange={this.sortingHandler}
-                    style={{ width: 500, margin: '0 auto' }}
+                    style={{width: 500, margin: '0 auto'}}
                     renderInput={params => (
                         <TextField
                             {...params}
@@ -69,9 +85,15 @@ class PostsView extends Component {
                         />
                     )}
                 />
-                <Posts
-                    posts={this.state.posts}/>
-                <AddButton />
+                <InfiniteScroll
+                    pageStart={-1}
+                    loadMore={this.loadArticles}
+                    hasMore={this.state.hasMoreArticles}
+                    loader={loader}
+                >
+                    {items} {/*This is the content you want to load*/}
+                </InfiniteScroll>
+                <AddButton/>
             </div>
         )
     }

@@ -8,11 +8,11 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import {Link, Redirect} from "react-router-dom";
-import ReactMarkdown from "react-markdown";
+import MarkDown from '../../ui/MarkDown/MarkDown';
 
 const useStyles = makeStyles({
     card: {
-        maxWidth: 650,
+        maxWidth: 850,
         margin: '20px',
         textDecoration: 'none'
     },
@@ -45,14 +45,11 @@ export default function ImgMediaCard(props) {
                         <Typography style={{textDecoration: 'none'}} gutterBottom variant="h5" component="h2">
                             {props.title}
                         </Typography>
-                        <Typography style={{textDecoration: 'none'}} gutterBottom variant="h7" component="h7">
+                        <Typography style={{textDecoration: 'none', marginBottom: '20px'}} gutterBottom variant="h6" component="h6">
                             {props.created}
                         </Typography>
                         <Typography variant="body2" color="textSecondary" component="p">
-                            <ReactMarkdown
-                                source={props.content.substring(0, 300)}
-                                escapeHtml={false}
-                            />
+                            <MarkDown source={props.content.replace("<h1>", "<p>").replace("</h1>", "</p>").substr(0, 300)} />
                             {props.content.length > 300 ? '...' : ''}
                         </Typography>
                     </CardContent>

@@ -56,7 +56,7 @@ class AddPost extends React.Component {
             tags: this.state.tags,
             content: this.state.content
         };
-        axios.post("/article", postData)
+        axios.put("/article", postData)
             .then(response => {
                 const id = response.data;
                 const fb = new FormData();
@@ -68,7 +68,7 @@ class AddPost extends React.Component {
                         this.setState({redirectUrl: redirectUrl});
                     })
             })
-    }
+    };
 
     handleFileChange(files) {
         this.setState({file: files[0]});

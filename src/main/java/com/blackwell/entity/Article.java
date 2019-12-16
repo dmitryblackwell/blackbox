@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -27,11 +28,17 @@ public class Article {
     @Column(columnDefinition="TEXT")
     private String content;
 
+    private UUID imageName;
     private String imageExtension;
     private boolean isImageLoaded;
 
+    private String imageUrl;
+
     private Date created;
     private Date updated;
+
+    @ManyToMany(cascade = CascadeType.MERGE)
+    private List<Tag> tags;
 
     @PrePersist
     protected void onCreate() {
@@ -43,6 +50,7 @@ public class Article {
         updated = new Date();
     }
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    private List<Tag> tags;
+    public String getImageFullName() {
+        return imageName != null ? (imageName.toString() + imageExtension) : StringUtils.EMPTY;
+    }
 }

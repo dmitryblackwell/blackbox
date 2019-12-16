@@ -41,12 +41,6 @@ build/
 # production
 /build
 
-# exclude basic images
-!target/images/10a4bf1f-a3cf-4283-b8fe-0ae9168146a8.png
-!target/images/677c0049-eecc-485e-a263-9548cc9fe84c.jpg
-!target/images/acb4d196-bc7d-4073-845e-4316bbd99544.jpg
-!target/images/b1a63311-3214-4c77-a689-2f5f5b2ba001.jpg
-
 # misc
 .DS_Store
 .env.local

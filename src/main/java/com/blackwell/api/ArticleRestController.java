@@ -15,14 +15,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -39,11 +38,15 @@ public class ArticleRestController {
             + "target" + File.separator + "images" + File.separator;
 
 
-    @GetMapping
-    public Iterable<ArticleDTO> articles(@RequestBody(required = false) Integer pageId) {
-        if (pageId == null)
-            pageId = 0;
-        return articleRepository.findAllByOrderByCreatedDesc(PageRequest.of(pageId, PAGE_SIZE))
+    @PostMapping
+    public Page<ArticleDTO> articles(@RequestBody(required = false) TagSearchRequest params) {
+        if (params.isTagsPresent()) {
+            return articleRepository.findAllByOrderByCreatedDesc(params.getPageRequest(PAGE_SIZE))
+                    .map(this::mapToDTO);
+        }
+        return articleRepository.findAllByTagsInOrderByCreatedDesc(
+                params.getTags(),
+                params.getPageRequest(PAGE_SIZE))
                 .map(this::mapToDTO);
     }
 
@@ -60,26 +63,28 @@ public class ArticleRestController {
 
     @GetMapping("/{id}")
     public ArticleDTO getArticle(@PathVariable String id) {
-        return mapToDTO(articleRepository.findById(UUID.fromString(id)).get());
+        return mapToDTO(articleRepository.findById(UUID.fromString(id)).orElseThrow());
     }
 
-    @PostMapping
+    @PutMapping
     public String saveArticle(@RequestBody ArticleDTO article) {
         Article result = articleRepository.save(mapToEntity(article));
         return result.getId().toString();
     }
 
     @PostMapping(value = "/upload")
-    public ResponseEntity uploadFile(@RequestParam("file") MultipartFile file, String id) throws IOException {
+    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file, String id) throws IOException {
         File dir = new File(IMAGE_PATH);
         if (!dir.exists())
             dir.mkdir();
 
         String fileExtension = "." + FilenameUtils.getExtension(file.getOriginalFilename());
-        file.transferTo(new File(IMAGE_PATH + id + fileExtension));
+        UUID imageId = UUID.randomUUID();
+        file.transferTo(new File(IMAGE_PATH + imageId.toString() + fileExtension));
 
-        Article article = articleRepository.findById(UUID.fromString(id)).get();
+        Article article = articleRepository.findById(UUID.fromString(id)).orElseThrow();
         article.setImageExtension(fileExtension);
+        article.setImageName(imageId);
         article.setImageLoaded(true);
         articleRepository.save(article);
 
@@ -89,12 +94,16 @@ public class ArticleRestController {
 
     // TODO refactor it with mapper or converter
     private ArticleDTO mapToDTO(Article article) {
-        File file = new File(IMAGE_PATH + article.getId() + article.getImageExtension());
         byte[] fileBytes;
         // refactor this construction
         try {
-            fileBytes = article.isImageLoaded() ?
-                    IOUtils.toByteArray(new FileInputStream(file)) : null;
+            if (article.isImageLoaded()) {
+                File file = new File(IMAGE_PATH + article.getImageFullName());
+                fileBytes = IOUtils.toByteArray(new FileInputStream(file));
+            } else {
+                URL url = new URL(article.getImageUrl());
+                fileBytes = new BufferedInputStream(url.openConnection().getInputStream()).readAllBytes();
+            }
         } catch (IOException e) {
             fileBytes = null;
             // TODO log it

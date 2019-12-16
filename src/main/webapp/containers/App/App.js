@@ -3,10 +3,10 @@ import {BrowserRouter, Switch, Route} from 'react-router-dom';
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import './App.css';
 import CssBaseline from "@material-ui/core/CssBaseline";
-import PostsView from './containers/PostsView/PostsView';
-import PostView from './containers/PostView/PostView';
-import Layout from './components/nav/Layout'
-import AddPost from './containers/AddPost/AddPost';
+import PostsView from '../PostsView/PostsView';
+import PostView from '../PostView/PostView';
+import Layout from '../../components/nav/Layout'
+import AddPost from '../AddPost/AddPost';
 
 
 const theme = createMuiTheme({
