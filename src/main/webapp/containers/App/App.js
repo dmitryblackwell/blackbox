@@ -7,6 +7,7 @@ import PostsView from '../PostsView/PostsView';
 import PostView from '../PostView/PostView';
 import Layout from '../../components/nav/Layout'
 import AddPost from '../AddPost/AddPost';
+import Footer from "../../components/nav/Footer/Footer";
 
 
 const theme = createMuiTheme({
@@ -42,6 +43,7 @@ function App() {
                         <Route path={"/posts/:id"} component={PostView} exact/>
                         <Route path={"/add-post"} component={AddPost} exact/>
                     </Switch>
+                    <Footer/>
                 </BrowserRouter>
             </div>
         </MuiThemeProvider>

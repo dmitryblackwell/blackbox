@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import {Link, Redirect} from "react-router-dom";
 import MarkDown from '../../ui/MarkDown/MarkDown';
+import Chip from "@material-ui/core/Chip";
 
 const useStyles = makeStyles({
     card: {
@@ -48,6 +49,9 @@ export default function ImgMediaCard(props) {
                         <Typography style={{textDecoration: 'none', marginBottom: '20px'}} gutterBottom variant="h6" component="h6">
                             {props.created}
                         </Typography>
+                        <div>
+                            {props.tags.map(tag => <Chip style={{marginRight: '5px'}} label={tag} />)}
+                        </div>
                         <Typography variant="body2" color="textSecondary" component="p">
                             <MarkDown source={props.content.replace("<h1>", "<p>").replace("</h1>", "</p>").substr(0, 300)} />
                             {props.content.length > 300 ? '...' : ''}

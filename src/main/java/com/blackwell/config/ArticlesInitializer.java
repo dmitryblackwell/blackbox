@@ -61,7 +61,7 @@ public class ArticlesInitializer implements InitializingBean {
                             .author(getRandomAuthor())
                             .content(getRandomContent())
                             .title(getRandomHeader())
-                            .tags(tags)
+                            .tags(articlesTags)
                             .imageUrl("https://source.unsplash.com/1600x900/?" + getTagsNamesAsParam(articlesTags))
                             .isImageLoaded(false)
                             .build();

@@ -6,9 +6,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class BlackartApplication {
 
-    //TODO pin tags to article
+    //TODO fix tags
     //TODO footer
     //TODO like/dislike
+    //TODO fix styles on search
     //TODO fix performance
     //TODO refactor
 
