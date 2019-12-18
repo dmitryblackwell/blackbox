@@ -7,12 +7,16 @@ const useStyles = makeStyles(theme => ({
         width: '100%',
         backgroundColor: theme.palette.primary.main,
         color: theme.palette.primary.contrastText,
+        fontSize: '0.8em',
+        height: '50px',
         padding: theme.spacing(2),
         marginTop: theme.spacing(7),
         textDecoration: 'none',
         position: 'relative',
         overflow: 'hidden',
-        bottom: 0
+        textAlign: 'center',
+        bottom: 0,
+        left: 0,
     },
 }));
 export default function Footer(props) {

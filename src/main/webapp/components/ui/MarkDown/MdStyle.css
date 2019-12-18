@@ -214,7 +214,7 @@ ul > li {
 }
 
 ul > li::before {
-    content: "»";
+    /*content: "»";*/
     display: block;
     position: relative;
     height: 0;
@@ -226,7 +226,7 @@ ul > li::before {
 }
 
 ul ul > li::before {
-    content: "›";
+    /*content: "›";*/
     display: block;
     position: relative;
     height: 0;

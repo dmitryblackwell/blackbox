@@ -40,15 +40,17 @@ public class ArticleRestController {
 
     @PostMapping
     public Page<ArticleDTO> articles(@RequestBody(required = false) TagSearchRequest params) {
-        if (params.isTagsPresent()) {
+        if (params.isTagsNotPresent()) {
             return articleRepository.findAllByOrderByCreatedDesc(params.getPageRequest(PAGE_SIZE))
                     .map(this::mapToDTO);
         }
-        return articleRepository.findAllByTagsInOrderByCreatedDesc(
+
+        Page<Article> articlePage = articleRepository.findAllByTagsInOrderByCreatedDesc(
                 params.getTags(),
-                params.getPageRequest(PAGE_SIZE))
-                .map(this::mapToDTO);
+                params.getPageRequest(PAGE_SIZE));
+        return articlePage.map(this::mapToDTO);
     }
+
 
     @PostMapping("/tag/")
     public Set<ArticleDTO> tagSearch(@RequestBody TagSearchRequest tagSearchRequest) {

@@ -4,7 +4,8 @@ import com.blackwell.entity.Article;
 import com.blackwell.entity.Tag;
 import com.blackwell.repository.ArticleRepository;
 import com.blackwell.repository.TagRepository;
-import org.springframework.beans.factory.InitializingBean;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Component
-public class ArticlesInitializer implements InitializingBean {
+public class ArticlesInitializer implements ApplicationListener<ApplicationReadyEvent> {
 
     private static final String API_URL_CONTENT = "http://loripsum.net/api/9/short/headers/links/ol/dl/bc/code";
     private static final String API_URL_HEADER = "http://loripsum.net/api/1/short/header/plaintext";
@@ -44,8 +45,9 @@ public class ArticlesInitializer implements InitializingBean {
         this.restTemplate = new RestTemplate();
     }
 
+
     @Override
-    public void afterPropertiesSet() {
+    public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
         List<Tag> tags = new ArrayList<>();
         tagRepository.saveAll(Arrays.stream(TAGS)
                 .map(tagName ->

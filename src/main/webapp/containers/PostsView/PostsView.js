@@ -7,8 +7,8 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import InfiniteScroll from 'react-infinite-scroller';
 import Post from "../../components/Posts/Post/Post";
-import {ScaleLoader} from 'react-spinners';
-import {css} from '@emotion/core';
+import Loader from "../../components/ui/Loader/Loader";
+
 
 class PostsView extends Component {
 
@@ -17,6 +17,7 @@ class PostsView extends Component {
         tags: [],
         currentTags: [],
         hasMoreArticles: true,
+        pageStart: -1,
     };
 
     componentDidMount() {
@@ -27,7 +28,7 @@ class PostsView extends Component {
     }
 
     sortingHandler = (event, values) => {
-        this.setState({currentTags: values, posts: [], hasMoreArticles: true});
+        this.setState({currentTags: values, posts: [], hasMoreArticles: true, pageStart: -1});
     };
 
     loadArticles = (page) => {
@@ -36,7 +37,6 @@ class PostsView extends Component {
             tags: this.state.currentTags
         };
         axios.post("/article", params).then(response => {
-            console.log({params: params.params, response: response});
             let newPosts = [...this.state.posts, ...response.data.content];
             this.setState({
                 posts: newPosts,
@@ -46,23 +46,11 @@ class PostsView extends Component {
     };
 
     render() {
-        let loader =
-            <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center' }} key={0}>
-                <ScaleLoader
-                    sizeUnit={"px"}
-                    size={150}
-                    color={'#ff0000'}
-                    loading={true}
-                />
-            </div>;
         let items = this.state.posts.map(post => {
             return <Post key={post.id} {...post}/>;
         });
         return (
-            <div style={{maxWidth: '850px', margin: '0 auto', paddingTop: '30px'}}>
+            <div style={{maxWidth: '850px', margin: '0 auto', paddingTop: '30px', minHeight: 'calc(100vh - 170px)'}}>
                 <Autocomplete
                     multiple
                     id="fixed-tags"
@@ -86,10 +74,10 @@ class PostsView extends Component {
                     )}
                 />
                 <InfiniteScroll
-                    pageStart={-1}
+                    pageStart={this.state.pageStart}
                     loadMore={this.loadArticles}
                     hasMore={this.state.hasMoreArticles}
-                    loader={loader}
+                    loader={<Loader key={0} />}
                 >
                     {items} {/*This is the content you want to load*/}
                 </InfiniteScroll>
