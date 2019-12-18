@@ -23,4 +23,7 @@ public class ArticleDTO {
     String created;
 
     private List<String> tags;
+
+    private int liked;
+    private int totalVotes;
 }

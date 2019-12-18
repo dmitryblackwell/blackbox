@@ -37,12 +37,17 @@ public class Article {
     private Date created;
     private Date updated;
 
+    private int liked;
+    private int disliked;
+
     @ManyToMany(cascade = CascadeType.MERGE)
     private List<Tag> tags;
 
     @PrePersist
     protected void onCreate() {
         created = new Date();
+        liked = 0;
+        disliked = 0;
     }
 
     @PreUpdate
@@ -53,4 +58,13 @@ public class Article {
     public String getImageFullName() {
         return imageName != null ? (imageName.toString() + imageExtension) : StringUtils.EMPTY;
     }
+
+    public void increaseLiked () {
+        this.liked++;
+    }
+
+    public void increaseDisliked () {
+        this.disliked++;
+    }
+
 }

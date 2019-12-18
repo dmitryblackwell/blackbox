@@ -6,7 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class BlackartApplication {
 
-    //TODO like/dislike
+    //TODO Validation
+    //TODO Error page
     //TODO fix performance
     //TODO refactor
 

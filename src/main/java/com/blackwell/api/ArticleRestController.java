@@ -93,6 +93,22 @@ public class ArticleRestController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/liked")
+    public ResponseEntity<?> liked(String id) {
+        Article article = articleRepository.findById(UUID.fromString(id)).orElseThrow();
+        article.increaseLiked();
+        articleRepository.save(article);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/disliked")
+    public ResponseEntity<?> disliked(String id) {
+        Article article = articleRepository.findById(UUID.fromString(id)).orElseThrow();
+        article.increaseDisliked();
+        articleRepository.save(article);
+        return ResponseEntity.ok().build();
+    }
+
 
     // TODO refactor it with mapper or converter
     private ArticleDTO mapToDTO(Article article) {
@@ -118,6 +134,8 @@ public class ArticleRestController {
                 .author(article.getAuthor())
                 .content(article.getContent())
                 .created(dateFormat.format(article.getCreated()))
+                .liked(article.getLiked())
+                .totalVotes(article.getLiked() + article.getDisliked())
                 .image(fileBytes)
                 .tags(article.getTags().stream()
                         .map(Tag::getName)
