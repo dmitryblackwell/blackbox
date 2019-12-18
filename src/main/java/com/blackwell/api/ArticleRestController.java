@@ -3,25 +3,32 @@ package com.blackwell.api;
 import com.blackwell.entity.Article;
 import com.blackwell.entity.Tag;
 import com.blackwell.payload.ArticleDTO;
+import com.blackwell.payload.SaveArticleResponse;
 import com.blackwell.payload.TagSearchRequest;
 import com.blackwell.repository.ArticleRepository;
 import com.blackwell.repository.TagRepository;
 import lombok.AllArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -69,9 +76,16 @@ public class ArticleRestController {
     }
 
     @PutMapping
-    public String saveArticle(@RequestBody ArticleDTO article) {
+    public ResponseEntity<SaveArticleResponse> saveArticle(@Valid @RequestBody ArticleDTO article, BindingResult bindingResult) {
+        SaveArticleResponse articleResponse = new SaveArticleResponse();
+        if (bindingResult.hasErrors()) {
+            articleResponse.setErrors(bindingResult.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList()));
+            return new ResponseEntity<>(articleResponse, HttpStatus.BAD_REQUEST);
+        }
         Article result = articleRepository.save(mapToEntity(article));
-        return result.getId().toString();
+        articleResponse.setId(result.getId().toString());
+        return ResponseEntity.ok(articleResponse);
     }
 
     @PostMapping(value = "/upload")

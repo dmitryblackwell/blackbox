@@ -6,9 +6,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class BlackartApplication {
 
-    //TODO Validation
+    //TODO Validation with errors display
     //TODO Error page
     //TODO fix performance
+    //TODO mobile version
     //TODO refactor
 
     public static void main(String[] args) {

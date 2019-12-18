@@ -10,6 +10,7 @@ import axios from '../../utils/axios';
 import 'regenerator-runtime/runtime';
 import {DropzoneArea} from 'material-ui-dropzone'
 import {Redirect} from "react-router";
+import Typography from "@material-ui/core/Typography";
 
 class AddPost extends React.Component {
     state = {
@@ -58,7 +59,8 @@ class AddPost extends React.Component {
         };
         axios.put("/article", postData)
             .then(response => {
-                const id = response.data;
+                this.setState({errors: ''});
+                const id = response.data.id;
                 const fb = new FormData();
                 fb.append('file', this.state.file, this.state.file.name);
                 fb.append('id', id);
@@ -66,7 +68,10 @@ class AddPost extends React.Component {
                     .then(response => {
                         const redirectUrl = "/posts/" + id;
                         this.setState({redirectUrl: redirectUrl});
-                    })
+                    });
+            })
+            .catch(error => {
+                this.setState({errors: 'Something went wrong'});
             })
     };
 
@@ -78,6 +83,9 @@ class AddPost extends React.Component {
         return (
             <div className={classes.root}>
                 {this.state.redirectUrl ? <Redirect to={this.state.redirectUrl} /> : ''}
+                <Typography gutterBottom variant="h6" component="h6" style={{color: 'red'}}>
+                    {this.state.errors}
+                </Typography>
                 <TextField
                     value={this.state.title}
                     onChange={this.onChangeHandler}
