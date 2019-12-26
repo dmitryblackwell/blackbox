@@ -7,6 +7,7 @@ import Loader from "../../components/ui/Loader/Loader";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
 
 class PostView extends React.Component {
     state = {};
@@ -63,13 +64,34 @@ class PostView extends React.Component {
                 </div>
             );
         }
+
         if (this.state.post) {
+            const linerProgress = (
+                <Grid container spacing={2}
+                      style={{flexGrow: 1, marginTop: '40px'}}
+                      direction="row"
+                      justify="center"
+                      alignItems="center">
+                    <Grid item xs={1}
+                          justify="center" style={{textAlign: 'center'}}>
+                        {this.state.post.liked}
+                    </Grid>
+                    <Grid item xs={10}
+                          justify="center">
+                        <LinearProgress variant="determinate" value={this.state.votePercent}  color="secondary" />
+                    </Grid>
+                    <Grid item xs={1}
+                          justify="center" style={{textAlign: 'center'}}>
+                        {this.state.post.totalVotes}
+                    </Grid>
+                </Grid>
+            );
             return (
                 <div>
                     <img style={{width: '100%', height: '250px', objectFit: 'cover'}}
                          src={'data:image/png;base64,' + this.state.post.image} alt={this.state.post.title}/>
                     <div style={{maxWidth: '650px', margin: 'auto', minHeight: 'calc(100vh - 170px)'}}>
-                        <LinearProgress variant="determinate" style={{marginTop: '40px'}} value={this.state.votePercent}  color="secondary" />
+                        {linerProgress}
                         <div id="markdown-wrapper">
                             <MarkDown
                                 source={this.state.post.content}
