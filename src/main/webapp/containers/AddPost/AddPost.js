@@ -71,8 +71,10 @@ class AddPost extends React.Component {
                     });
             })
             .catch(error => {
-                this.setState({errors: 'Something went wrong'});
-            })
+                if (error.response.data.errors) {
+                    this.setState({errors: error.response.data.errors});
+                }
+            });
     };
 
     handleFileChange(files) {
@@ -84,7 +86,7 @@ class AddPost extends React.Component {
             <div className={classes.root}>
                 {this.state.redirectUrl ? <Redirect to={this.state.redirectUrl} /> : ''}
                 <Typography gutterBottom variant="h6" component="h6" style={{color: 'red'}}>
-                    {this.state.errors}
+                    {this.state.errors ? this.state.errors.map(err => <p>{err}</p>) : null}
                 </Typography>
                 <TextField
                     value={this.state.title}

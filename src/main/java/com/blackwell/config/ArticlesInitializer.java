@@ -48,14 +48,12 @@ public class ArticlesInitializer implements ApplicationListener<ApplicationReady
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
-        List<Tag> tags = new ArrayList<>();
-        tagRepository.saveAll(Arrays.stream(TAGS)
+        List<Tag> tags = Arrays.stream(TAGS)
                 .map(tagName ->
                         Tag.builder()
                                 .name(tagName)
                                 .build())
-                .collect(Collectors.toList()))
-                .forEach(tags::add);
+                .collect(Collectors.toList());
         articleRepository.saveAll(
                 Stream.generate(() -> {
                     List<Tag> articlesTags = getRandomTags(tags);

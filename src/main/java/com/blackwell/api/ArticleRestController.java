@@ -79,9 +79,11 @@ public class ArticleRestController {
     public ResponseEntity<SaveArticleResponse> saveArticle(@Valid @RequestBody ArticleDTO article, BindingResult bindingResult) {
         SaveArticleResponse articleResponse = new SaveArticleResponse();
         if (bindingResult.hasErrors()) {
-            articleResponse.setErrors(bindingResult.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage)
+            articleResponse.setErrors(bindingResult.getAllErrors()
+                    .stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
                     .collect(Collectors.toList()));
-            return new ResponseEntity<>(articleResponse, HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(articleResponse);
         }
         Article result = articleRepository.save(mapToEntity(article));
         articleResponse.setId(result.getId().toString());

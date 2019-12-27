@@ -40,7 +40,7 @@ public class Article {
     private int liked;
     private int disliked;
 
-    @ManyToMany(cascade = CascadeType.MERGE)
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Tag> tags;
 
     @PrePersist

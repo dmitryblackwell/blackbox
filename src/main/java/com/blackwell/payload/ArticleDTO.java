@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Data
@@ -15,11 +16,13 @@ import java.util.List;
 public class ArticleDTO {
     private String id;
 
-    @NotBlank
+    @NotBlank(message = "Title must not be blank")
     private String title;
-    @NotBlank
+
+    @NotBlank(message = "Content must not be blank")
     private String content;
-    @NotBlank
+
+    @NotBlank(message = "Author must not be blank")
     private String author;
 
     private byte[] image;
