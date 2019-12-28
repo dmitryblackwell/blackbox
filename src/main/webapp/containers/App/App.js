@@ -1,7 +1,7 @@
 import React from 'react';
 import {BrowserRouter, Switch, Route} from 'react-router-dom';
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
-import './App.css';
+import {MuiThemeProvider, createMuiTheme} from "@material-ui/core/styles";
+import classes from './App.css';
 import CssBaseline from "@material-ui/core/CssBaseline";
 import PostsView from '../PostsView/PostsView';
 import PostView from '../PostView/PostView';
@@ -33,9 +33,10 @@ const theme = createMuiTheme({
 
 function App() {
     return (
-        <MuiThemeProvider theme={theme}>
-            <CssBaseline />
-            <div className="App">
+
+        <div className={classes.App}>
+            <MuiThemeProvider theme={theme}>
+                <CssBaseline/>
                 <BrowserRouter>
                     <Layout/>
                     <Switch>
@@ -45,8 +46,8 @@ function App() {
                     </Switch>
                     <Footer/>
                 </BrowserRouter>
-            </div>
-        </MuiThemeProvider>
+            </MuiThemeProvider>
+        </div>
     );
 }
 

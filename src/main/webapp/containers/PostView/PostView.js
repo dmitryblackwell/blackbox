@@ -9,6 +9,8 @@ import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 
+import classes from './PostView.module.css';
+
 class PostView extends React.Component {
     state = {};
 
@@ -53,7 +55,7 @@ class PostView extends React.Component {
         let vote = null;
         if (!this.state.isVoted) {
             vote = (
-                <div style={{width: '100%', marginTop: '80px', marginBottom: '170px'}}>
+                <div style={{marginTop: '80px', marginBottom: '170px'}}>
                     <Typography  component="div" style={{float: 'left'}}>
                         Was this article helpful?
                     </Typography>
@@ -67,7 +69,7 @@ class PostView extends React.Component {
 
         if (this.state.post) {
             const linerProgress = (
-                <Grid container spacing={2}
+                <Grid container spacing={0}
                       style={{flexGrow: 1, marginTop: '40px'}}
                       direction="row"
                       justify="center"
@@ -90,7 +92,7 @@ class PostView extends React.Component {
                 <div>
                     <img style={{width: '100%', height: '250px', objectFit: 'cover'}}
                          src={'data:image/png;base64,' + this.state.post.image} alt={this.state.post.title}/>
-                    <div style={{maxWidth: '650px', margin: 'auto', minHeight: 'calc(100vh - 170px)'}}>
+                    <div className={classes.Wrapper}>
                         {linerProgress}
                         <div id="markdown-wrapper">
                             <MarkDown
@@ -106,7 +108,7 @@ class PostView extends React.Component {
             )
         } else {
             return (
-                <div style={{minHeight: 'calc(100vh - 190px)'}}>
+                <div className={classes.Loader}>
                     <Loader/>
                 </div>
             );

@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 @Component
 public class ArticlesInitializer implements ApplicationListener<ApplicationReadyEvent> {
 
-    private static final String API_URL_CONTENT = "http://loripsum.net/api/9/short/headers/links/ol/dl/bc/code";
+    private static final String API_URL_CONTENT = "http://loripsum.net/api/9/short/headers/links/ol/dl/bc/";
     private static final String API_URL_HEADER = "http://loripsum.net/api/1/short/header/plaintext";
 
     private static final String[] TAGS = {"future", "tech", "element", "health", "science", "business", "work", "culture",

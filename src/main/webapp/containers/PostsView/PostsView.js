@@ -9,6 +9,7 @@ import InfiniteScroll from 'react-infinite-scroller';
 import Post from "../../components/Posts/Post/Post";
 import Loader from "../../components/ui/Loader/Loader";
 
+import classes from './PostsView.module.css';
 
 class PostsView extends Component {
 
@@ -50,7 +51,7 @@ class PostsView extends Component {
             return <Post key={post.id} {...post}/>;
         });
         return (
-            <div style={{maxWidth: '850px', margin: '0 auto', paddingTop: '30px', minHeight: 'calc(100vh - 170px)'}}>
+            <div className={classes.Root}>
                 <Autocomplete
                     multiple
                     id="fixed-tags"
@@ -62,7 +63,7 @@ class PostsView extends Component {
                         ))
                     }
                     onChange={this.sortingHandler}
-                    style={{width: 500, margin: '0 auto'}}
+                    style={{maxWidth: 500, margin: '0 auto'}}
                     renderInput={params => (
                         <TextField
                             {...params}

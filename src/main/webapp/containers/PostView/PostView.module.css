@@ -1,0 +1,15 @@
+.Wrapper {
+    text-align: left;
+    max-width: 650px;
+    margin: 0 auto;
+}
+
+.Loader {
+    min-height: calc(100vh - 190px);
+}
+
+@media (max-width: 500px) {
+    .Loader {
+        min-height: calc(100vh - 182px);
+    }
+}

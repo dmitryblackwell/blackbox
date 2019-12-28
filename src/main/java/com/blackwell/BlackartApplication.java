@@ -11,6 +11,9 @@ public class BlackartApplication {
     //TODO fix performance
     //TODO mobile version
     //TODO refactor
+    //TODO fix bug with tag search
+    //TODO add catch response on frontend
+    //TODO move styles to styles files on frontend
 
     public static void main(String[] args) {
         SpringApplication.run(BlackartApplication.class, args);

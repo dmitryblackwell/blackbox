@@ -121,11 +121,13 @@ class AddPost extends React.Component {
                         return <Chip style={{marginRight: '5px'}} key={tag} label={tag} onDelete={() => this.handleDelete(tag)} color="primary" />;
                     })}
                 </div>
-                <DropzoneArea
-                    onChange={this.handleFileChange.bind(this)}
-                    filesLimit={1}
-                    acceptedFiles={['image/*']}
-                />
+                <div style={{marginTop: '20px', marginBottom: '20px'}}>
+                    <DropzoneArea
+                        onChange={this.handleFileChange.bind(this)}
+                        filesLimit={1}
+                        acceptedFiles={['image/*']}
+                    />
+                </div>
                 <TextareaAutosize
                     value={this.state.content}
                     onChange={this.onChangeHandler}
