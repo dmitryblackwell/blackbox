@@ -4,16 +4,17 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BlackartApplication {
+public class BlackboxApplication {
 
     //TODO Validation with errors display
     //TODO Error page
     //TODO fix performance
     //TODO mobile version
     //TODO refactor
+    //TODO write awesome readme
 
     public static void main(String[] args) {
-        SpringApplication.run(BlackartApplication.class, args);
+        SpringApplication.run(BlackboxApplication.class, args);
     }
 
 }

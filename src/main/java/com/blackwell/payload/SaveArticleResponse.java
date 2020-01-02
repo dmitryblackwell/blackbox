@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -14,5 +14,5 @@ import java.util.List;
 public class SaveArticleResponse {
     private String id;
     private boolean isValid;
-    private List<String> errors;
+    private Map<String, String> errors;
 }

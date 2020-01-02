@@ -89,7 +89,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.blackwell.BlackartApplication</mainClass>
+                    <mainClass>com.blackwell.BlackboxApplication</mainClass>
                 </configuration>
             </plugin>
             <plugin>
