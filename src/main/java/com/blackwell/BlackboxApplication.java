@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class BlackboxApplication {
 
-    //TODO Validation with errors display
     //TODO Error page
     //TODO fix performance
     //TODO mobile version
