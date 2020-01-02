@@ -18,7 +18,7 @@ class PostsView extends Component {
         tags: [],
         currentTags: [],
         hasMoreArticles: true,
-        pageStart: -1,
+        currentPage: 0,
     };
 
     componentDidMount() {
@@ -29,19 +29,20 @@ class PostsView extends Component {
     }
 
     sortingHandler = (event, values) => {
-        this.setState({currentTags: values, posts: [], hasMoreArticles: true, pageStart: -1});
+        this.setState({currentTags: values, posts: [], hasMoreArticles: true, currentPage: 0});
     };
 
-    loadArticles = (page) => {
+    loadArticles = () => {
         const params = {
-            pageId: page,
+            pageId: this.state.currentPage,
             tags: this.state.currentTags
         };
         axios.post("/article", params).then(response => {
             let newPosts = [...this.state.posts, ...response.data.content];
             this.setState({
                 posts: newPosts,
-                hasMoreArticles: page < response.data.totalPages,
+                hasMoreArticles: this.state.currentPage < response.data.totalPages,
+                currentPage: this.state.currentPage+1,
             })
         }); //TODO add catch response here and on other axios request
     };

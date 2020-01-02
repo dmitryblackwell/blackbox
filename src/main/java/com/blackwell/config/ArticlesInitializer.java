@@ -2,8 +2,11 @@ package com.blackwell.config;
 
 import com.blackwell.entity.Article;
 import com.blackwell.entity.Tag;
+import com.blackwell.payload.PixabayApiResponse;
 import com.blackwell.repository.ArticleRepository;
 import com.blackwell.repository.TagRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
@@ -19,15 +22,17 @@ public class ArticlesInitializer implements ApplicationListener<ApplicationReady
     private static final String API_URL_CONTENT = "http://loripsum.net/api/9/short/headers/links/ol/dl/bc/";
     private static final String API_URL_HEADER = "http://loripsum.net/api/1/short/header/plaintext";
 
+    private static final int PIXABAY_IMAGES_PER_PAGE_LENGTH = 50;
+    private static final String PIXABAY_API_URL = "https://pixabay.com/api/?key=" + AuthKey.PIXABAY_AUTH_KEY
+            + "&per_page=" + PIXABAY_IMAGES_PER_PAGE_LENGTH + "&q=";
+
     private static final String[] TAGS = {"future", "tech", "element", "health", "science", "business", "work", "culture",
                         "food", "programming", "design", "neuroscience", "politics", "relationships", "style"};
 
     private static final String[] AUTHORS = {"Delia Owens", "Michelle Obama", "Dav Pilkey", "Rachel Hollis", "Jeff Kinney",
                         "Rachel Hollis", "Dr. Seuss", "Tara Westover", "Heather Morris", "Craig Smith"};
 
-    private static final UUID IMAGES_ID = UUID.fromString("10a4bf1f-a3cf-4283-b8fe-0ae9168146a8");
-    private static final String IMAGES_EXTENSION = ".png";
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(ArticlesInitializer.class);
 
     private static final int ARTICLES_COUNT = 50;
     public static final String SPLIT_BY_SENTENCE_REGEXP = "(?<=[a-z])\\.\\s+";
@@ -54,6 +59,7 @@ public class ArticlesInitializer implements ApplicationListener<ApplicationReady
                                 .name(tagName)
                                 .build())
                 .collect(Collectors.toList());
+        LOGGER.info("Starting initialization of photos...");
         articleRepository.saveAll(
                 Stream.generate(() -> {
                     List<Tag> articlesTags = getRandomTags(tags);
@@ -62,11 +68,21 @@ public class ArticlesInitializer implements ApplicationListener<ApplicationReady
                             .content(getRandomContent())
                             .title(getRandomHeader())
                             .tags(articlesTags)
-                            .imageUrl("https://source.unsplash.com/1600x900/?" + getTagsNamesAsParam(articlesTags))
+                            .imageUrl(getRandomImageUrl(articlesTags))
                             .isImageLoaded(false)
                             .build();
                 }).limit(ARTICLES_COUNT)
                         .collect(Collectors.toList()));
+        LOGGER.info("Finish initialization of photos");
+    }
+
+    private String getRandomImageUrl(List<Tag> tags) {
+        // TODO get whole bunch of images for all tags and after pick one
+        String url = PIXABAY_API_URL + tags.get(0).getName();
+        PixabayApiResponse response = restTemplate.getForObject(url, PixabayApiResponse.class);
+        if (response == null)
+            return "";
+        return response.getHits()[random.nextInt(response.getHits().length)].getWebformatURL();
     }
 
     private String getRandomContent() {
@@ -92,7 +108,7 @@ public class ArticlesInitializer implements ApplicationListener<ApplicationReady
     private String getTagsNamesAsParam(List<Tag> tags) {
         return tags.stream()
                 .map(Tag::getName)
-                .collect(Collectors.joining(","));
+                .collect(Collectors.joining("+"));
     }
 
 }
