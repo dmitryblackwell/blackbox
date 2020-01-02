@@ -2,6 +2,7 @@ package com.blackwell.api;
 
 import com.blackwell.entity.Article;
 import com.blackwell.entity.Tag;
+import com.blackwell.mapper.ArticleMapper;
 import com.blackwell.payload.ArticleDTO;
 import com.blackwell.payload.SaveArticleResponse;
 import com.blackwell.payload.TagSearchRequest;
@@ -9,7 +10,6 @@ import com.blackwell.repository.ArticleRepository;
 import com.blackwell.repository.TagRepository;
 import lombok.AllArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -46,13 +42,13 @@ public class ArticleRestController {
     public Page<ArticleDTO> articles(@RequestBody(required = false) TagSearchRequest params) {
         if (params.isTagsNotPresent()) {
             return articleRepository.findAllByOrderByCreatedDesc(params.getPageRequest(PAGE_SIZE))
-                    .map(this::mapToDTO);
+                    .map(ArticleMapper::mapToDTO);
         }
 
         Page<Article> articlePage = articleRepository.findAllByTagsInOrderByCreatedDesc(
                 params.getTags(),
                 params.getPageRequest(PAGE_SIZE));
-        return articlePage.map(this::mapToDTO);
+        return articlePage.map(ArticleMapper::mapToDTO);
     }
 
 
@@ -63,13 +59,13 @@ public class ArticleRestController {
                         tagSearchRequest.getTags(),
                         tagSearchRequest.getPageRequest(PAGE_SIZE));
         return articlePage.get()
-                .map(this::mapToDTO)
+                .map(ArticleMapper::mapToDTO)
                 .collect(Collectors.toSet());
     }
 
     @GetMapping("/{id}")
     public ArticleDTO getArticle(@PathVariable String id) {
-        return mapToDTO(articleRepository.findById(UUID.fromString(id)).orElseThrow());
+        return ArticleMapper.mapToDTO(articleRepository.findById(UUID.fromString(id)).orElseThrow());
     }
 
     @PutMapping
@@ -83,7 +79,17 @@ public class ArticleRestController {
             articleResponse.setErrors(errorsMap);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(articleResponse);
         }
-        Article result = articleRepository.save(mapToEntity(article));
+
+        // TODO save tags other way
+        List<Tag> tags = article.getTags().stream()
+                .map(tagName -> {
+                    Optional<Tag> tagOptional = tagRepository.findByName(tagName);
+                    return tagOptional.orElseGet(() -> Tag.builder()
+                            .name(tagName)
+                            .build());
+                })
+                .collect(Collectors.toList());
+        Article result = articleRepository.save(ArticleMapper.mapToEntity(article, tags));
         articleResponse.setId(result.getId().toString());
         return ResponseEntity.ok(articleResponse);
     }
@@ -94,6 +100,7 @@ public class ArticleRestController {
         if (!dir.exists())
             dir.mkdir();
 
+        // TODO move this code to the handlers
         String fileExtension = "." + FilenameUtils.getExtension(file.getOriginalFilename());
         UUID imageId = UUID.randomUUID();
         file.transferTo(new File(IMAGE_PATH + imageId.toString() + fileExtension));
@@ -124,57 +131,5 @@ public class ArticleRestController {
     }
 
 
-    // TODO refactor it with mapper or converter
-    private ArticleDTO mapToDTO(Article article) {
-        byte[] fileBytes;
-        // refactor this construction
-        try {
-            if (article.isImageLoaded()) {
-                File file = new File(IMAGE_PATH + article.getImageFullName());
-                fileBytes = IOUtils.toByteArray(new FileInputStream(file));
-            } else {
-                URL url = new URL(article.getImageUrl());
-                fileBytes = new BufferedInputStream(url.openConnection().getInputStream()).readAllBytes();
-            }
-        } catch (IOException e) {
-            fileBytes = null;
-            // TODO log it
-            e.printStackTrace();
-        }
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss z");
-        return ArticleDTO.builder()
-                .id(article.getId().toString())
-                .title(article.getTitle())
-                .author(article.getAuthor())
-                .content(article.getContent())
-                .created(dateFormat.format(article.getCreated()))
-                .liked(article.getLiked())
-                .totalVotes(article.getLiked() + article.getDisliked())
-                .image(fileBytes)
-                .tags(article.getTags().stream()
-                        .map(Tag::getName)
-                        .collect(Collectors.toList()))
-                .build();
-    }
-
-    private Article mapToEntity(ArticleDTO article) {
-        // TODO refactor it with less db usage
-        List<Tag> tags = article.getTags().stream()
-                .map(tagName -> {
-                    Optional<Tag> tagOptional = tagRepository.findByName(tagName);
-                    return tagOptional.orElseGet(() -> Tag.builder()
-                            .name(tagName)
-                            .build());
-                })
-                .collect(Collectors.toList());
-        return Article.builder()
-                .id(article.getId() == null ? null : UUID.fromString(article.getId()))
-                .title(article.getTitle())
-                .author(article.getAuthor())
-                .content(article.getContent())
-                .isImageLoaded(article.getImage() != null)
-                .tags(tags)
-                .build();
-    }
 
 }
