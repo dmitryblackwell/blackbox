@@ -10,6 +10,8 @@ import Layout from '../../components/nav/Layout'
 import AddPost from '../AddPost/AddPost';
 import Footer from "../../components/nav/Footer/Footer";
 import Error404 from '../errors/Error404';
+import ErrorBoundary from "../errors/ErrorBoundary";
+import {Redirect} from "react-router";
 
 
 const theme = createMuiTheme({
@@ -34,21 +36,26 @@ const theme = createMuiTheme({
 });
 
 function App() {
+    const createRedirect = to => () => <Redirect to={to}/>;
     return (
 
         <div className={classes.App}>
             <MuiThemeProvider theme={theme}>
                 <CssBaseline/>
-                <BrowserRouter>
-                    <Layout/>
-                    <Switch>
-                        <Route path={"/posts/"} component={PostsView} exact/>
-                        <Route path={"/posts/:id"} component={PostView} exact/>
-                        <Route path={"/add-post"} component={AddPost} exact/>
-                        <Route component={Error404} />
-                    </Switch>
-                    <Footer/>
-                </BrowserRouter>
+                    <BrowserRouter>
+                        <Layout/>
+                        <ErrorBoundary>
+                            <Switch>
+                                <Route path={"/"} component={createRedirect('/posts/')} exact/>
+                                <Route path={"/posts/"} component={PostsView} exact/>
+                                <Route path={"/posts/:id"} component={PostView} exact/>
+                                <Route path={"/add-post"} component={AddPost} exact/>
+                                <Route path={"/404"} component={Error404} exact/>
+                                <Route component={createRedirect("/404")}/>
+                            </Switch>
+                        </ErrorBoundary>
+                        <Footer/>
+                    </BrowserRouter>
             </MuiThemeProvider>
         </div>
     );

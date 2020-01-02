@@ -116,13 +116,13 @@ class AddPost extends React.Component {
                     className={classes.textField}
                     margin="normal"
                 />
-                <div style={{marginTop: '20px', marginBottom: '20px'}}>
+                <div className={classes.chips}>
                     {this.state.tags.map(tag => {
-                        return <Chip style={{marginRight: '5px'}} key={tag} label={tag} onDelete={() => this.handleDelete(tag)} color="primary" />;
+                        return <Chip className={classes.chip} key={tag} label={tag} onDelete={() => this.handleDelete(tag)} color="primary" />;
                     })}
                 </div>
 
-                <div style={{width: '75%', margin: '0 auto', padding: '30px'}}>
+                <div className={classes.dropzone}>
                     <DropzoneArea
                         onChange={this.handleFileChange.bind(this)}
                         filesLimit={1}

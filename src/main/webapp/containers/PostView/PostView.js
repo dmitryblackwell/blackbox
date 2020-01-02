@@ -16,10 +16,11 @@ class PostView extends React.Component {
 
     componentDidMount() {
         const id = this.props.match.params.id;
-        axios.get("/article/" + id).then(response => {
-            this.setState({post: {...response.data}});
-            this.setVotesPercent();
-        });
+        axios.get("/article/" + id)
+            .then(response => {
+                this.setState({post: {...response.data}});
+                this.setVotesPercent();
+            });
         const isVoted = window.sessionStorage.getItem(id);
         this.setState({isVoted: isVoted});
     }

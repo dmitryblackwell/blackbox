@@ -11,7 +11,7 @@ public class IndexController {
     @Value("${app.mode}")
     private String mode;
 
-    @GetMapping(value = {"/", "/posts/**", "/add-post"})
+    @GetMapping(value = {"/404", "/500", "/", "/posts/**", "/add-post"})
     public ModelAndView index() {
         ModelAndView modelAndView = new ModelAndView("index");
         modelAndView.addObject("isDevMode", "dev".equals(mode));

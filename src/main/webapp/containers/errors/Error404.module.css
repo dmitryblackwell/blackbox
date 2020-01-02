@@ -1,0 +1,16 @@
+.Root {
+    max-width: 100%;
+    height: calc(100vh - 170px);
+    margin: 0 auto;
+    text-align: center;
+}
+
+.Box {
+    max-width: 30%;
+}
+
+@media (max-width: 500px) {
+    .Root {
+        min-height: calc(100vh - 162px);
+    }
+}

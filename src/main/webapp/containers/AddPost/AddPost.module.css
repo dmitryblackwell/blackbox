@@ -9,7 +9,22 @@
     margin: 30px 0;
 }
 .button {
-    float: right
+    float: right;
+    margin: 20px auto 20px !important;
+}
+
+.chips {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.chip {
+    margin-right: 5px;
+}
+
+.dropzone {
+    width: 75%;
+    margin: 0 auto;
+    padding: 30px;
 }
 
 @media (max-width: 500px) {

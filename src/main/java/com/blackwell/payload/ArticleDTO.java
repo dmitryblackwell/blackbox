@@ -15,8 +15,6 @@ import java.util.List;
 public class ArticleDTO {
     private String id;
 
-    //TODO make more rules
-
     @NotBlank
     private String title;
 

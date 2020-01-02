@@ -6,7 +6,7 @@ import Chip from '@material-ui/core/Chip';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import InfiniteScroll from 'react-infinite-scroller';
-import Post from "../../components/Posts/Post/Post";
+import Post from "../../components/Post/Post";
 import Loader from "../../components/ui/Loader/Loader";
 
 import classes from './PostsView.module.css';
@@ -43,7 +43,7 @@ class PostsView extends Component {
                 posts: newPosts,
                 hasMoreArticles: page < response.data.totalPages,
             })
-        });
+        }); //TODO add catch response here and on other axios request
     };
 
     render() {

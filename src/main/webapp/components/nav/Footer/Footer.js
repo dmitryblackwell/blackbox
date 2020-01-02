@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
         left: 0,
     },
 }));
-export default function Footer(props) {
+export default function Footer() {
     const classes = useStyles();
     return (
         <footer className={classes.Footer}>

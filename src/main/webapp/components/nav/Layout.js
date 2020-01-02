@@ -31,13 +31,11 @@ export default function ButtonAppBar() {
                     <Link to={"/posts/"}>
                         <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
                             <HomeTwoToneIcon />
-                            {/*<img src="/logo.png" style={{width: '30px'}}/>*/}
                         </IconButton>
                     </Link>
                     <Typography variant="h6" className={classes.title}>
                         BlackBox
                     </Typography>
-                    {/*<Button color="inherit">Login</Button>*/}
                 </Toolbar>
             </AppBar>
         </div>
