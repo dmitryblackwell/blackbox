@@ -4,9 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BlackartApplication {
+public class BlackboxApplication {
 
-    //TODO Validation with errors display
     //TODO Error page
     //TODO fix performance
     //TODO mobile version
@@ -14,9 +13,10 @@ public class BlackartApplication {
     //TODO fix bug with tag search
     //TODO add catch response on frontend
     //TODO move styles to styles files on frontend
+    //TODO write awesome readme
 
     public static void main(String[] args) {
-        SpringApplication.run(BlackartApplication.class, args);
+        SpringApplication.run(BlackboxApplication.class, args);
     }
 
 }

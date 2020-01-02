@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {BrowserRouter, Switch, Route} from 'react-router-dom';
 import {MuiThemeProvider, createMuiTheme} from "@material-ui/core/styles";
 import classes from './App.css';
@@ -8,6 +9,7 @@ import PostView from '../PostView/PostView';
 import Layout from '../../components/nav/Layout'
 import AddPost from '../AddPost/AddPost';
 import Footer from "../../components/nav/Footer/Footer";
+import Error404 from '../errors/Error404';
 
 
 const theme = createMuiTheme({
@@ -40,9 +42,10 @@ function App() {
                 <BrowserRouter>
                     <Layout/>
                     <Switch>
-                        <Route path={"/"} component={PostsView} exact/>
+                        <Route path={"/posts/"} component={PostsView} exact/>
                         <Route path={"/posts/:id"} component={PostView} exact/>
                         <Route path={"/add-post"} component={AddPost} exact/>
+                        <Route component={Error404} />
                     </Switch>
                     <Footer/>
                 </BrowserRouter>

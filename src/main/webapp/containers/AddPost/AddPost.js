@@ -2,7 +2,6 @@ import React from 'react';
 
 import classes from './AddPost.module.css';
 import TextField from "@material-ui/core/TextField";
-import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 import Button from "@material-ui/core/Button";
 import Chip from "@material-ui/core/Chip";
 import axios from '../../utils/axios';
@@ -10,7 +9,6 @@ import axios from '../../utils/axios';
 import 'regenerator-runtime/runtime';
 import {DropzoneArea} from 'material-ui-dropzone'
 import {Redirect} from "react-router";
-import Typography from "@material-ui/core/Typography";
 
 class AddPost extends React.Component {
     state = {
@@ -20,7 +18,8 @@ class AddPost extends React.Component {
         tmpTag: null,
         content: null,
         file: null,
-        redirectUrl: null
+        redirectUrl: null,
+        errors: [],
     };
 
     onChangeHandler = (event) => {
@@ -85,10 +84,9 @@ class AddPost extends React.Component {
         return (
             <div className={classes.root}>
                 {this.state.redirectUrl ? <Redirect to={this.state.redirectUrl} /> : ''}
-                <Typography gutterBottom variant="h6" component="h6" style={{color: 'red'}}>
-                    {this.state.errors ? this.state.errors.map(err => <p>{err}</p>) : null}
-                </Typography>
                 <TextField
+                    error={this.state.errors["title"]}
+                    helperText={this.state.errors["title"]}
                     value={this.state.title}
                     onChange={this.onChangeHandler}
                     required
@@ -98,6 +96,8 @@ class AddPost extends React.Component {
                     margin="normal"
                 />
                 <TextField
+                    error={this.state.errors["author"]}
+                    helperText={this.state.errors["author"]}
                     value={this.state.author}
                     onChange={this.onChangeHandler}
                     required
@@ -121,20 +121,26 @@ class AddPost extends React.Component {
                         return <Chip style={{marginRight: '5px'}} key={tag} label={tag} onDelete={() => this.handleDelete(tag)} color="primary" />;
                     })}
                 </div>
-                <div style={{marginTop: '20px', marginBottom: '20px'}}>
+
+                <div style={{width: '75%', margin: '0 auto', padding: '30px'}}>
                     <DropzoneArea
                         onChange={this.handleFileChange.bind(this)}
                         filesLimit={1}
                         acceptedFiles={['image/*']}
                     />
                 </div>
-                <TextareaAutosize
+
+                <TextField
+                    multiline
+                    error={this.state.errors["content"]}
+                    helperText={this.state.errors["content"]}
                     value={this.state.content}
                     onChange={this.onChangeHandler}
                     name="content"
                     className={classes.textField}
                     aria-label="minimum height"
                     rows={10}
+                    variant="outlined"
                     placeholder="Content" />
                 <Button variant="contained" color="primary" onClick={this.submit} className={classes.button}>
                     Save

@@ -10,11 +10,11 @@ import com.blackwell.repository.TagRepository;
 import lombok.AllArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,10 +25,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -79,10 +76,11 @@ public class ArticleRestController {
     public ResponseEntity<SaveArticleResponse> saveArticle(@Valid @RequestBody ArticleDTO article, BindingResult bindingResult) {
         SaveArticleResponse articleResponse = new SaveArticleResponse();
         if (bindingResult.hasErrors()) {
-            articleResponse.setErrors(bindingResult.getAllErrors()
-                    .stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .collect(Collectors.toList()));
+            Map<String, String> errorsMap = new HashMap<>();
+            for (FieldError fieldError : bindingResult.getFieldErrors()) {
+                errorsMap.put(fieldError.getField(), fieldError.getDefaultMessage());
+            }
+            articleResponse.setErrors(errorsMap);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(articleResponse);
         }
         Article result = articleRepository.save(mapToEntity(article));
